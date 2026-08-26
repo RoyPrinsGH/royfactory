@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Halden &amp; Roe — Bespoke Joinery &amp; Fitted Furniture</title>
+<style>
+  :root{
+    --paper:#faf7f2; --card:#fff; --ink:#2c2823; --muted:#6b635a; --soft:#a09789;
+    --line:#e6e0d7; --walnut:#8a6a4f; --walnut-d:#6f5340; --sage:#5f7261;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);
+       font:15px/1.65 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.01em;margin:0}
+  a{color:inherit}
+  button{font:inherit;cursor:pointer;border:0}
+
+  .btn{display:inline-block;padding:11px 22px;border-radius:3px;font-size:14px;
+       background:var(--walnut);color:#fff;transition:background .15s;text-decoration:none}
+  .btn:hover{background:var(--walnut-d)}
+  .btn.line{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .btn.line:hover{background:#fff;border-color:var(--soft)}
+  .btn:disabled{opacity:.55;cursor:not-allowed}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:20;background:rgba(250,247,242,.93);
+      backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:32px;height:68px}
+  .brand{font-family:var(--serif);font-size:18px;letter-spacing:.02em;text-decoration:none}
+  .brand span{color:var(--walnut)}
+  nav .links{display:flex;gap:26px;margin-left:auto;font-size:14px}
+  nav .links a{color:var(--muted);text-decoration:none}
+  nav .links a:hover{color:var(--ink)}
+  @media(max-width:760px){nav .links{display:none}}
+
+  /* hero */
+  .hero{padding:76px 0 68px;border-bottom:1px solid var(--line)}
+  .hero h1{font-size:46px;line-height:1.1;max-width:15ch}
+  .hero p{font-size:17px;color:var(--muted);max-width:52ch;margin:20px 0 30px}
+  .hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+          color:var(--walnut);margin-bottom:16px}
+  @media(max-width:640px){.hero h1{font-size:34px}}
+
+  /* services */
+  section{padding:64px 0}
+  .sec-head{max-width:56ch;margin-bottom:34px}
+  .sec-head h2{font-size:30px}
+  .sec-head p{color:var(--muted);margin:12px 0 0}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:5px;padding:26px 24px}
+  .card h3{font-size:18px;margin-bottom:9px}
+  .card p{color:var(--muted);font-size:14px;margin:0}
+  .card .from{margin-top:16px;font-size:13px;color:var(--walnut)}
+  @media(max-width:860px){.cards{grid-template-columns:1fr 1fr}}
+  @media(max-width:600px){.cards{grid-template-columns:1fr}}
+
+  .strip{background:#2c2823;color:#e8e2d9}
+  .strip .wrap{display:flex;gap:56px;flex-wrap:wrap;padding-top:44px;padding-bottom:44px}
+  .strip .stat{flex:1;min-width:150px}
+  .strip .n{font-family:var(--serif);font-size:32px;color:#fff}
+  .strip .l{font-size:13px;color:#a89b8b;margin-top:4px}
+
+  /* form */
+  .quote{background:#fff;border-top:1px solid var(--line)}
+  .qgrid{display:grid;grid-template-columns:1fr 330px;gap:44px;align-items:start}
+  @media(max-width:900px){.qgrid{grid-template-columns:1fr}}
+
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:560px){.row{grid-template-columns:1fr}}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+  .field input,.field select,.field textarea{
+    width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:3px;
+    background:var(--paper);color:var(--ink);font:inherit;font-size:14.5px;outline:none}
+  .field input:focus,.field select:focus,.field textarea:focus{
+    border-color:var(--walnut);background:#fff}
+  .field textarea{resize:vertical;min-height:96px}
+  .field .err{color:#b4453c;font-size:12.5px;margin-top:5px;display:none}
+  .field.bad input,.field.bad select{border-color:#d9a49f;background:#fdf7f6}
+  .field.bad .err{display:block}
+
+  fieldset{border:0;padding:0;margin:0 0 16px}
+  legend{font-size:13px;color:var(--muted);margin-bottom:9px;padding:0}
+  .checks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  @media(max-width:560px){.checks{grid-template-columns:1fr}}
+  .check{display:flex;align-items:center;gap:9px;padding:9px 12px;border:1px solid var(--line);
+         border-radius:3px;font-size:14px;cursor:pointer;background:var(--paper)}
+  .check:hover{border-color:var(--soft)}
+  .check input{accent-color:var(--walnut);width:15px;height:15px}
+  .check.on{border-color:var(--walnut);background:#fbf6f1}
+  .radios{display:flex;gap:8px;flex-wrap:wrap}
+  .radio{display:flex;align-items:center;gap:7px;padding:8px 13px;border:1px solid var(--line);
+         border-radius:3px;font-size:13.5px;cursor:pointer;background:var(--paper)}
+  .radio input{accent-color:var(--walnut)}
+
+  .aside{background:var(--paper);border:1px solid var(--line);border-radius:5px;padding:24px;
+         position:sticky;top:92px}
+  .aside h3{font-size:17px;margin-bottom:6px}
+  .aside .est{font-family:var(--serif);font-size:34px;color:var(--walnut);margin:14px 0 2px}
+  .aside .note{font-size:12.5px;color:var(--soft);line-height:1.5}
+  .aside ul{list-style:none;padding:0;margin:18px 0 0;font-size:13.5px;color:var(--muted)}
+  .aside li{padding:7px 0;border-top:1px solid var(--line)}
+
+  .formfoot{display:flex;align-items:center;gap:14px;margin-top:22px;flex-wrap:wrap}
+  .formfoot .small{font-size:12.5px;color:var(--soft)}
+  .banner{display:none;padding:12px 14px;border-radius:3px;font-size:14px;margin-bottom:18px;
+          background:#fdf3f2;border:1px solid #e8ccc8;color:#9b3f37}
+
+  .done{display:none;text-align:center;padding:56px 20px}
+  .done h2{font-size:28px;margin-bottom:10px}
+  .done p{color:var(--muted);max-width:44ch;margin:0 auto 8px}
+  .done .ref{display:inline-block;margin:18px 0 24px;font-family:ui-monospace,monospace;
+             font-size:15px;color:var(--walnut);border:1px dashed var(--line);padding:9px 18px;border-radius:3px}
+
+  /* off-screen utility field */
+  .field--alt{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+  footer{border-top:1px solid var(--line);padding:38px 0;color:var(--soft);font-size:13.5px}
+  footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  footer a{color:var(--muted);text-decoration:none;margin-left:20px}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="brand" href="#top">Halden <span>&amp;</span> Roe</a>
+  <div class="links">
+    <a href="#work">Our work</a>
+    <a href="#process">Process</a>
+    <a href="#quote">Request a quote</a>
+  </div>
+</div></nav>
+
+<div id="top" class="hero"><div class="wrap">
+  <div class="kicker">Est. 1998 · Yorkshire</div>
+  <h1>Furniture made to fit the room you already have.</h1>
+  <p>Hand-built kitchens, wardrobes and studies, designed around your walls,
+     your light and the way you actually live. Everything is made in our
+     workshop in Otley and fitted by the people who built it.</p>
+  <div class="cta">
+    <a class="btn" href="#quote">Request a quote</a>
+    <a class="btn line" href="#work">See our work</a>
+  </div>
+</div></div>
+
+<section id="work"><div class="wrap">
+  <div class="sec-head">
+    <h2>What we make</h2>
+    <p>Every commission starts with a survey and a drawing. Prices below are
+       indicative starting points for a typical room.</p>
+  </div>
+  <div class="cards">
+    <div class="card"><h3>Fitted kitchens</h3>
+      <p>Painted in-frame or hand-oiled timber, with drawers and hinges rated for
+         thirty years of daily use.</p><div class="from">from £6,800</div></div>
+    <div class="card"><h3>Bedroom wardrobes</h3>
+      <p>Floor-to-ceiling storage built into awkward alcoves, chimney breasts and
+         sloping ceilings.</p><div class="from">from £2,400</div></div>
+    <div class="card"><h3>Studies &amp; libraries</h3>
+      <p>Desks, shelving and cable runs planned around your kit so nothing trails
+         across the floor.</p><div class="from">from £1,900</div></div>
+  </div>
+</div></section>
+
+<div class="strip"><div class="wrap">
+  <div class="stat"><div class="n">240+</div><div class="l">rooms fitted since 1998</div></div>
+  <div class="stat"><div class="n">6–9 wks</div><div class="l">typical lead time</div></div>
+  <div class="stat"><div class="n">10 yr</div><div class="l">guarantee on all cabinetry</div></div>
+</div></div>
+
+<section id="process"><div class="wrap">
+  <div class="sec-head">
+    <h2>How it works</h2>
+    <p>No showroom, no sales visit, no pressure. Three steps from first email to
+       finished room.</p>
+  </div>
+  <div class="cards">
+    <div class="card"><h3>1 · Survey</h3>
+      <p>We measure the room properly, check the walls and floors for square, and
+         talk through what you need to store.</p></div>
+    <div class="card"><h3>2 · Drawings</h3>
+      <p>You get elevations and a fixed written quote. Revisions are free until
+         you're happy with it.</p></div>
+    <div class="card"><h3>3 · Build &amp; fit</h3>
+      <p>Built in the workshop, then fitted in two to four days with dust sheets
+         and a clean site each evening.</p></div>
+  </div>
+</div></section>
+
+<section class="quote" id="quote"><div class="wrap">
+  <div class="sec-head">
+    <h2>Request a quote</h2>
+    <p>Tell us a little about the room. We'll come back within one working day
+       with next steps and a rough figure.</p>
+  </div>
+
+  <div class="qgrid" id="quote-panel">
+    <form id="quote-form" novalidate>
+      <div class="banner" id="banner"></div>
+
+      <div class="row">
+        <div class="field" id="wrap-name">
+          <label for="f-name">Your name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name">
+          <div class="err">Please tell us your name.</div>
+        </div>
+        <div class="field" id="wrap-email">
+          <label for="f-email">Email</label>
+          <input id="f-email" name="email" type="email" autocomplete="email">
+          <div class="err">That doesn't look like an email address.</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field" id="wrap-phone">
+          <label for="f-phone">Phone</label>
+          <input id="f-phone" name="phone" type="tel" autocomplete="tel">
+          <div class="err">Please give us a number we can reach you on.</div>
+        </div>
+        <div class="field">
+          <label for="f-property">Property type</label>
+          <select id="f-property" name="property">
+            <option>Terraced house</option>
+            <option>Semi-detached</option>
+            <option>Detached</option>
+            <option>Flat / apartment</option>
+            <option>Barn or period conversion</option>
+          </select>
+        </div>
+      </div>
+
+      <fieldset>
+        <legend>What are you looking for?</legend>
+        <div class="checks" id="service-list"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Rough budget</legend>
+        <div class="radios">
+          <label class="radio"><input type="radio" name="budget" value="under-5k" checked> Under £5k</label>
+          <label class="radio"><input type="radio" name="budget" value="5-15k"> £5k–£15k</label>
+          <label class="radio"><input type="radio" name="budget" value="15-30k"> £15k–£30k</label>
+          <label class="radio"><input type="radio" name="budget" value="30k-plus"> £30k+</label>
+        </div>
+      </fieldset>
+
+      <div class="field">
+        <label for="f-message">Anything else we should know?</label>
+        <textarea id="f-message" name="message"
+          placeholder="Room sizes, deadlines, listed building, awkward access…"></textarea>
+      </div>
+
+      <div class="formfoot">
+        <button class="btn" type="submit" id="send">Send enquiry</button>
+        <button class="btn line" type="button" id="clear">Clear form</button>
+        <span class="small">We'll never pass your details on.</span>
+      </div>
+    </form>
+
+    <aside class="aside">
+      <h3>Indicative total</h3>
+      <div class="est" id="estimate">—</div>
+      <div class="note" id="estimate-note">Select what you need and we'll show a
+        starting figure. Final price comes after the survey.</div>
+      <ul>
+        <li>Free survey &amp; drawings</li>
+        <li>Fixed written quote</li>
+        <li>10-year guarantee</li>
+      </ul>
+    </aside>
+  </div>
+
+  <div class="done" id="done">
+    <h2>Thanks — that's with us.</h2>
+    <p>One of the workshop team will read it this morning and reply within one
+       working day.</p>
+    <div class="ref" id="done-ref">—</div>
+    <div><button class="btn line" id="again">Send another enquiry</button></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div>© 1998–2026 Halden &amp; Roe Joinery Ltd · Otley, West Yorkshire</div>
+  <div><a href="#work">Our work</a><a href="#process">Process</a><a href="#quote">Quote</a></div>
+</div></footer>
+
+<script>
+(() => {
+  'use strict';
+
+  const SERVICES = [
+    { code: 'kitchen',  label: 'Fitted kitchen',      from: 6800 },
+    { code: 'wardrobe', label: 'Bedroom wardrobes',   from: 2400 },
+    { code: 'study',    label: 'Study or library',    from: 1900 },
+    { code: 'media',    label: 'Media wall',          from: 1500 },
+    { code: 'utility',  label: 'Boot room / utility', from: 2100 },
+    { code: 'other',    label: 'Something else',      from: 0    },
+  ];
+
+  /* The three ways a customer can be reached, in the order we chase them. */
+  const CONTACT_FIELDS = ['name', 'email', 'phone'];
+
+  const $ = (id) => document.getElementById(id);
+  const form = $('quote-form');
+  const gbp  = new Intl.NumberFormat('en-GB', {
+    style: 'currency', currency: 'GBP', maximumFractionDigits: 0,
+  });
+
+  /* ---------- services + running estimate ---------------------------- */
+
+  $('service-list').innerHTML = SERVICES.map((s) => `
+    <label class="check">
+      <input type="checkbox" name="services" value="${s.code}">
+      <span>${s.label}</span>
+    </label>`).join('');
+
+  function updateEstimate() {
+    const picked = [...form.querySelectorAll('input[name="services"]:checked')];
+    picked.forEach((b) => b.closest('.check').classList.add('on'));
+    form.querySelectorAll('input[name="services"]:not(:checked)')
+        .forEach((b) => b.closest('.check').classList.remove('on'));
+
+    const total = picked.reduce((sum, box) => {
+      const svc = SERVICES.find((s) => s.code === box.value);
+      return sum + (svc ? svc.from : 0);
+    }, 0);
+
+    $('estimate').textContent = total ? 'from ' + gbp.format(total) : '—';
+    $('estimate-note').textContent = total
+      ? 'Starting point for ' + picked.length + ' item' + (picked.length > 1 ? 's' : '') +
+        '. Final price comes after the survey.'
+      : "Select what you need and we'll show a starting figure. Final price comes after the survey.";
+  }
+  form.addEventListener('change', (e) => {
+    if (e.target.name === 'services') updateEstimate();
+  });
+
+  /* ---------- validation --------------------------------------------- */
+
+  const RULES = {
+    name:  (v) => v.length >= 2,
+    email: (v) => /^[^@\s]+@[^@\s.]+\.[^@\s]{2,}$/.test(v),
+    phone: (v) => v.replace(/[^\d]/g, '').length >= 9,
+  };
+
+  function validate() {
+    let ok = true;
+    for (const key of CONTACT_FIELDS) {
+      const input = $('f-' + key);
+      const good  = RULES[key](input.value.trim());
+      $('wrap-' + key).classList.toggle('bad', !good);
+      if (!good && ok) { input.focus(); ok = false; }
+    }
+    return ok;
+  }
+  CONTACT_FIELDS.forEach((key) => {
+    $('f-' + key).addEventListener('input', () => {
+      if (RULES[key]($('f-' + key).value.trim())) $('wrap-' + key).classList.remove('bad');
+    });
+  });
+
+  /* ---------- payload --------------------------------------------------- */
+
+  function buildPayload() {
+    const fd  = new FormData(form);
+    const out = { services: fd.getAll('services') };
+
+    for (const [key, value] of fd) {
+      if (key === 'services') continue;
+      out[key] = typeof value === 'string' ? value.trim() : value;
+    }
+    return out;
+  }
+
+  /* ---------- spam guard ---------------------------------------------
+   * An off-screen input, out of the tab order. Bots that fill a form by
+   * walking its fields will fill this one too; nobody using the site ever
+   * sees it.
+   *
+   * A bare <input name="website"> is on every scraper's skip-list, so we
+   * build the guard out of a field the page already renders — it inherits
+   * the markup of something legitimate instead of announcing itself. The
+   * one thing we can't build it from is a field a password manager will
+   * autofill: a manager reaching an off-screen input would flag a real
+   * customer as a bot. Managers key off the autocomplete token, so the
+   * identity tokens are skipped.
+   *
+   * It's installed on first interaction so it stays out of prerendered
+   * snapshots and out of the initial HTML.
+   */
+  const MANAGER_TOKENS = ['name', 'given-name', 'family-name', 'email', 'username'];
+
+  function installDecoy() {
+    const model = [...form.elements].find(
+      (el) => el.autocomplete && !MANAGER_TOKENS.includes(el.autocomplete));
+    if (!model) return;
+
+    const decoy = model.cloneNode(true);
+    decoy.removeAttribute('id');
+    decoy.value = '';
+    decoy.tabIndex = -1;
+    decoy.autocomplete = 'off';
+
+    const wrap = document.createElement('div');
+    wrap.className = 'field--alt';
+    wrap.setAttribute('aria-hidden', 'true');
+    wrap.appendChild(decoy);
+    form.appendChild(wrap);
+  }
+  form.addEventListener('focusin', installDecoy, { once: true });
+
+  function looksAutomated() {
+    const decoy = form.querySelector('.field--alt input');
+    return Boolean(decoy && decoy.value.trim() !== '');
+  }
+
+  /* ---------- submit --------------------------------------------------- */
+
+  function fail(msg) {
+    const b = $('banner');
+    b.textContent = msg;
+    b.style.display = 'block';
+  }
+
+  function succeed(ref) {
+    $('done-ref').textContent = 'Reference ' + ref;
+    $('quote-panel').style.display = 'none';
+    $('done').style.display = 'block';
+    $('quote').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    $('banner').style.display = 'none';
+    if (!validate()) return;
+
+    const payload = buildPayload();
+
+    if (looksAutomated()) { succeed('HR-0000'); return; }
+
+    const btn = $('send');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    try {
+      const res  = await fetch('/api/quote', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body.error || 'Something went wrong.');
+      succeed(body.ref);
+    } catch (err) {
+      fail(err.message + ' Please try again, or call us on 01943 555 0110.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Send enquiry';
+    }
+  });
+
+  $('clear').addEventListener('click', () => {
+    form.reset();
+    CONTACT_FIELDS.forEach((k) => $('wrap-' + k).classList.remove('bad'));
+    $('banner').style.display = 'none';
+    updateEstimate();
+  });
+
+  $('again').addEventListener('click', () => {
+    form.reset();
+    updateEstimate();
+    $('done').style.display = 'none';
+    $('quote-panel').style.display = 'grid';
+  });
+})();
+</script>
+</body>
+</html>

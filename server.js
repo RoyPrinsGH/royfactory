@@ -4,6 +4,10 @@ const path = require('path');
 
 const PORT = process.env.PORT || 3000;
 
+/* Compliance switch. When the DPA review is signed off this comes on by default
+ * and enquiries are kept without a contact number. Off everywhere for now. */
+const STRIP_PII = process.env.STRIP_PII === '1';
+
 /* Enquiries live in memory — this is the demo build, the production one
  * writes through to the CRM. */
 const enquiries = [];
@@ -12,6 +16,8 @@ let seq = 1040;
 const clean = (v, max = 400) => String(v ?? '').trim().slice(0, max);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+const MIME = { '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8' };
 
 function readBody(req) {
   return new Promise((resolve, reject) => {
@@ -32,6 +38,7 @@ function inboxPage() {
         <td>${esc(e.name) || '<i>—</i>'}</td>
         <td>${esc(e.email) || '<i>—</i>'}</td>
         <td>${esc(e.phone) || '<i>—</i>'}</td>
+        <td>${esc(e.postcode) || '<i>—</i>'}</td>
         <td>${esc(e.property)}</td>
         <td>${esc(e.services.join(', ')) || '<i>—</i>'}</td>
         <td>${esc(e.budget)}</td>
@@ -57,7 +64,7 @@ function inboxPage() {
 </style>
 <header><h1>Enquiry inbox</h1><p class="sub">${enquiries.length} enquir${enquiries.length === 1 ? 'y' : 'ies'} · demo build</p></header>
 ${enquiries.length ? `<table>
-  <tr><th>Ref</th><th>Name</th><th>Email</th><th>Phone</th><th>Property</th>
+  <tr><th>Ref</th><th>Name</th><th>Email</th><th>Phone</th><th>Postcode</th><th>Property</th>
       <th>Services</th><th>Budget</th><th>Message</th><th>Received</th></tr>
   ${rows}
 </table>` : '<div class="empty">No enquiries yet.</div>'}`;
@@ -69,6 +76,17 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && (url.pathname === '/' || url.pathname === '/index.html')) {
     res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
     return res.end(fs.readFileSync(path.join(__dirname, 'index.html')));
+  }
+
+  if (req.method === 'GET' && /^\/assets\/[\w.-]+\.(js|css)$/.test(url.pathname)) {
+    const file = path.join(__dirname, url.pathname);
+    if (fs.existsSync(file)) {
+      res.writeHead(200, {
+        'content-type': MIME[path.extname(file)],
+        'cache-control': 'public, max-age=600',
+      });
+      return res.end(fs.readFileSync(file));
+    }
   }
 
   if (req.method === 'GET' && url.pathname === '/inbox') {
@@ -85,6 +103,8 @@ const server = http.createServer(async (req, res) => {
       return res.end(JSON.stringify({ error: 'Malformed request.' }));
     }
 
+    if (STRIP_PII) delete data.phone;
+
     if (!clean(data.name) || !clean(data.email)) {
       res.writeHead(422, { 'content-type': 'application/json' });
       return res.end(JSON.stringify({ error: 'Name and email are required.' }));
@@ -96,7 +116,9 @@ const server = http.createServer(async (req, res) => {
       received: new Date().toISOString(),
       name:     clean(data.name, 120),
       email:    clean(data.email, 160),
+      /* CRM contact_number is still the legacy VARCHAR(40) column. */
       phone:    clean(data.phone, 40),
+      postcode: clean(data.postcode, 12),
       property: clean(data.property, 40),
       budget:   clean(data.budget, 40),
       services: Array.isArray(data.services) ? data.services.map((s) => clean(s, 40)) : [],
